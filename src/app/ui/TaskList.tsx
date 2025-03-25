@@ -67,8 +67,9 @@ export default function TaskList() {
       {tasks.map((task) => (
         <li
           key={task.id}
-          className={clsx("group grid grid-cols-[24px_1fr_32px] w-full px-4", {
-            "border-light-gray border-t-1 border-b-1": task.id === activeTaskId,
+          className={clsx("group grid grid-cols-[24px_1fr_32px] items-center w-full px-4 border-t-1 border-b-1", {
+            "border-light-gray": task.id === activeTaskId,
+            "border-transparent": task.id !== activeTaskId
           })}
         >
           <TaskItem
@@ -83,8 +84,9 @@ export default function TaskList() {
 
       <li
         key="-1"
-        className={clsx("grid grid-cols-[24px_1fr_32px] w-full px-4", {
-          "border-light-gray border-t-1 border-b-1": -1 === activeTaskId,
+        className={clsx("grid grid-cols-[24px_1fr_32px] w-full px-4 border-t-1 border-b-1", {
+          "border-light-gray ": -1 === activeTaskId,
+          "border-transparent": -1 !== activeTaskId
         })}
       >
         <AddTask onAddTask={handleOnAdd} onActiveTask={handleActiveTask} />
