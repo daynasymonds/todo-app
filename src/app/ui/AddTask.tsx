@@ -1,26 +1,28 @@
-import { Task } from "@/app/types";
-import { ChangeEvent, KeyboardEvent } from "react";
+import { useState, KeyboardEvent } from "react";
 
 interface AddTaskProps {
-  task: Task;
-  onAddTask: (event: ChangeEvent<HTMLInputElement>) => void;
-  onEnterKeyPress: (event: KeyboardEvent<HTMLInputElement>) => void;
+  onAddTask: (content: string) => void;
 }
 
-export default function AddTask({
-  task,
-  onAddTask,
-  onEnterKeyPress,
-}: AddTaskProps) {
+export default function AddTask({ onAddTask }: AddTaskProps) {
+  const [content, setContent] = useState("");
+
   return (
     <>
       <label>+</label>{" "}
       <input
         id="addTask"
         type="text"
-        value={task.content}
-        onChange={onAddTask}
-        onKeyDown={onEnterKeyPress}
+        value={content}
+        onChange={(e) => setContent(e.currentTarget.value)}
+        onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+          if (e.key !== "Enter") return;
+
+          e.preventDefault();
+
+          setContent("");
+          onAddTask(content);
+        }}
         placeholder="List item"
       />
     </>

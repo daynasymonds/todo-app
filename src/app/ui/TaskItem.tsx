@@ -1,11 +1,13 @@
 import { Task } from "@/app/types";
-import { ChangeEvent } from "react";
+import { useCallback } from "react";
+import sanitizeHtml from "sanitize-html";
+import { sanitizedConf } from "@/app/utils";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 
 interface TaskProps {
   task: Task;
-  onContentChange: (event: ContentEditableEvent) => void;
-  onCompleteTask: (event: ChangeEvent<HTMLInputElement>) => void;
+  onContentChange: (task: Task) => void;
+  onCompleteTask: (taskId: number, isCompleted: boolean) => void;
 }
 
 export default function TaskItem({
@@ -13,16 +15,28 @@ export default function TaskItem({
   onContentChange,
   onCompleteTask,
 }: TaskProps) {
+  const handleContentChange = useCallback(
+    (e: ContentEditableEvent) => {
+      const updatedTask = {
+        ...task,
+        content: sanitizeHtml(e.currentTarget.innerHTML, sanitizedConf),
+      };
+
+      onContentChange(updatedTask);
+    },
+    [task, onContentChange]
+  );
+
   return (
     <>
       <input
         type="checkbox"
         id={"completeTask" + task.id}
         checked={task.isCompleted}
-        onChange={onCompleteTask}
+        onChange={() => onCompleteTask(task.id, !task.isCompleted)}
       />
       <ContentEditable
-        onChange={onContentChange}
+        onChange={handleContentChange}
         onBlur={onContentChange}
         html={task.content}
       />
