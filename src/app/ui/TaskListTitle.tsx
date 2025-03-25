@@ -11,10 +11,12 @@ export default function CardTitle() {
   }, []);
 
   return (
-    <ContentEditable
-      onChange={handleTitleChange}
-      onBlur={handleTitleChange}
-      html={cardTitle}
-    />
+    <div className="text-xl font-bold pl-4 pb-4">
+      <ContentEditable
+        onChange={handleTitleChange}
+        onBlur={handleTitleChange}
+        html={cardTitle}
+      />
+    </div>
   );
 }

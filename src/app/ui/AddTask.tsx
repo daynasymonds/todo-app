@@ -2,9 +2,10 @@ import { useState, KeyboardEvent } from "react";
 
 interface AddTaskProps {
   onAddTask: (content: string) => void;
+  onActiveTask: (taskId: number) => void;
 }
 
-export default function AddTask({ onAddTask }: AddTaskProps) {
+export default function AddTask({ onAddTask, onActiveTask }: AddTaskProps) {
   const [content, setContent] = useState("");
 
   return (
@@ -14,14 +15,18 @@ export default function AddTask({ onAddTask }: AddTaskProps) {
         id="addTask"
         type="text"
         value={content}
-        onChange={(e) => setContent(e.currentTarget.value)}
+        onClick={() => onActiveTask(-1)}
+        onFocus={() => onActiveTask(-1)}
+        onChange={(e) => {
+          onActiveTask(-1);
+          setContent(e.currentTarget.value);
+        }}
         onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-          if (e.key !== "Enter") return;
-
+          if (e.key !== "Enter" && e.key !== "Tab") return;
           e.preventDefault();
-
-          setContent("");
           onAddTask(content);
+          setContent("");
+          onActiveTask(-10);
         }}
         placeholder="List item"
       />
