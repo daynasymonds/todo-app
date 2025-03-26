@@ -1,25 +1,22 @@
 import { Task } from "@/app/types";
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import sanitizeHtml from "sanitize-html";
 import { sanitizedConf } from "@/app/utils";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import Image from "next/image";
+import { TasksDispatchContext } from "@/app/TaskListContext";
 
 interface TaskProps {
   task: Task;
-  onContentChange: (task: Task) => void;
-  onCompleteTask: (taskId: number, isCompleted: boolean) => void;
-  onDeleteTask: (taskId: number) => void;
   onActiveTask: (taskId: number) => void;
 }
 
 export default function TaskItem({
   task,
-  onContentChange,
-  onCompleteTask,
-  onDeleteTask,
   onActiveTask,
 }: TaskProps) {
+  const dispatch = useContext(TasksDispatchContext);
+
   const handleContentChange = useCallback(
     (e: ContentEditableEvent) => {
       const updatedTask = {
@@ -27,9 +24,12 @@ export default function TaskItem({
         content: sanitizeHtml(e.currentTarget.innerHTML, sanitizedConf),
       };
 
-      onContentChange(updatedTask);
+      dispatch({
+        type: "UPDATED",
+        task: updatedTask,
+      });
     },
-    [task, onContentChange]
+    [task, dispatch]
   );
 
   return (
@@ -39,8 +39,14 @@ export default function TaskItem({
         type="checkbox"
         id={"completeTask" + task.id}
         checked={task.isCompleted}
-        onClick={() => onActiveTask(task.id)}
-        onChange={() => onCompleteTask(task.id, !task.isCompleted)}
+        onChange={() => {
+          onActiveTask(task.id);
+          dispatch({
+            type: "COMPLETED_TOGGLED",
+            id: task.id,
+            isCompleted: !task.isCompleted,
+          });
+        }}
       />
       <ContentEditable
         onChange={handleContentChange}
@@ -50,10 +56,15 @@ export default function TaskItem({
       />
 
       <button
-        className={"w-[26px] h-[26px] justify-self-end place-items-center hidden cursor-pointer group-hover:block hover:bg-lighter-gray hover:rounded-full"}
+        className={
+          "w-[26px] h-[26px] justify-self-end place-items-center hidden cursor-pointer group-hover:block hover:bg-lighter-gray hover:rounded-full"
+        }
         onClick={() => {
           onActiveTask(task.id);
-          onDeleteTask(task.id);
+          dispatch({
+            type: "DELETED",
+            id: task.id,
+          });
         }}
         aria-label="Delete task"
         title="Delete"

@@ -1,12 +1,15 @@
-import { useState, KeyboardEvent } from "react";
+import { useState, useContext, KeyboardEvent } from "react";
+import { TasksDispatchContext } from "@/app/TaskListContext";
 
 interface AddTaskProps {
-  onAddTask: (content: string) => void;
   onActiveTask: (taskId: number) => void;
 }
 
-export default function AddTask({ onAddTask, onActiveTask }: AddTaskProps) {
+let nextTaskId = 4;
+
+export default function AddTask({ onActiveTask }: AddTaskProps) {
   const [content, setContent] = useState("");
+  const dispatch  = useContext(TasksDispatchContext);
 
   return (
     <>
@@ -24,7 +27,11 @@ export default function AddTask({ onAddTask, onActiveTask }: AddTaskProps) {
         onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
           if (e.key !== "Enter" && e.key !== "Tab") return;
           e.preventDefault();
-          onAddTask(content);
+          dispatch({
+            type: "ADDED",
+            id: nextTaskId++,
+            content: content,
+          });
           setContent("");
           onActiveTask(-10);
         }}

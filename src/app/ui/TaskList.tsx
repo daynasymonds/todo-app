@@ -1,56 +1,17 @@
-import { KeyboardEvent, useReducer, useState } from "react";
-import { initialTasks } from "@/app/data";
-import { Task } from "@/app/types";
+import { KeyboardEvent, useState, useContext } from "react";
 import AddTask from "@/app/ui/AddTask";
 import TaskItem from "@/app/ui/TaskItem";
-import { taskReducer } from "@/app/taskReducer";
 import clsx from "clsx";
-
-let nextTaskId = 4;
+import { TasksContext } from "@/app/TaskListContext";
 
 export default function TaskList() {
-  const [tasks, dispatch] = useReducer(taskReducer, initialTasks);
+  const tasks = useContext(TasksContext);
 
   const [activeTaskId, setActiveTaskId] = useState<number | null>(null);
 
   const handleActiveTask = (taskId: number) => {
     setActiveTaskId(taskId);
   };
-
-  const handleOnAdd = (content: string) => {
-    dispatch({
-      type: "ADDED",
-      id: nextTaskId++,
-      content: content,
-    });
-  };
-
-  const handleOnComplete = (taskId: number, isCompletedValue: boolean) => {
-    setActiveTaskId(taskId);
-    dispatch({
-      type: "COMPLETED_TOGGLED",
-      id: taskId,
-      isCompleted: isCompletedValue,
-    });
-  };
-
-  const handleOnDelete = (taskId: number) => {
-    setActiveTaskId(taskId);
-    dispatch({
-      type: "DELETED",
-      id: taskId,
-    });
-  };
-
-  const handleOnContentChange = (updatedTask: Task) => {
-    setActiveTaskId(updatedTask.id);
-    dispatch({
-      type: "UPDATED",
-      task: updatedTask,
-    });
-  };
-
-  
 
   return (
     <ul
@@ -67,29 +28,29 @@ export default function TaskList() {
       {tasks.map((task) => (
         <li
           key={task.id}
-          className={clsx("group grid grid-cols-[24px_1fr_32px] items-center w-full px-4 border-t-1 border-b-1", {
-            "border-light-gray": task.id === activeTaskId,
-            "border-transparent": task.id !== activeTaskId
-          })}
+          className={clsx(
+            "group grid grid-cols-[24px_1fr_32px] items-center w-full px-4 border-t-1 border-b-1",
+            {
+              "border-light-gray": task.id === activeTaskId,
+              "border-transparent": task.id !== activeTaskId,
+            }
+          )}
         >
-          <TaskItem
-            task={task}
-            onContentChange={handleOnContentChange}
-            onCompleteTask={handleOnComplete}
-            onDeleteTask={handleOnDelete}
-            onActiveTask={handleActiveTask}
-          />
+          <TaskItem task={task} onActiveTask={handleActiveTask} />
         </li>
       ))}
 
       <li
         key="-1"
-        className={clsx("grid grid-cols-[24px_1fr_32px] w-full px-4 border-t-1 border-b-1", {
-          "border-light-gray ": -1 === activeTaskId,
-          "border-transparent": -1 !== activeTaskId
-        })}
+        className={clsx(
+          "grid grid-cols-[24px_1fr_32px] w-full px-4 border-t-1 border-b-1",
+          {
+            "border-light-gray ": -1 === activeTaskId,
+            "border-transparent": -1 !== activeTaskId,
+          }
+        )}
       >
-        <AddTask onAddTask={handleOnAdd} onActiveTask={handleActiveTask} />
+        <AddTask onActiveTask={handleActiveTask} />
       </li>
     </ul>
   );
