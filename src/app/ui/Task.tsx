@@ -11,10 +11,7 @@ interface TaskProps {
   onActiveTask: (taskId: number) => void;
 }
 
-export default function TaskItem({
-  task,
-  onActiveTask,
-}: TaskProps) {
+export default function Task({ task, onActiveTask }: TaskProps) {
   const dispatch = useContext(TasksDispatchContext);
 
   const handleContentChange = useCallback(
@@ -33,7 +30,7 @@ export default function TaskItem({
   );
 
   return (
-    <>
+    <div className="grid grid-cols-[24px_1fr_32px] gap-2 items-center  w-full">
       <input
         className={"justify-self-start"}
         type="checkbox"
@@ -71,6 +68,6 @@ export default function TaskItem({
       >
         <Image src="/delete.svg" alt="Delete task" width={18} height={18} />
       </button>
-    </>
+    </div>
   );
 }

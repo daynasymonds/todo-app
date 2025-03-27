@@ -1,4 +1,9 @@
-import { createContext, useReducer, ReactNode, ActionDispatch } from "react";
+import {
+  createContext,
+  useReducer,
+  ReactNode,
+  ActionDispatch,
+} from "react";
 import { Task, Tasks } from "./types";
 import { initialTasks } from "@/app/data";
 
@@ -28,6 +33,13 @@ interface UpdatedTaskAction extends TaskAction {
   task: Task;
 }
 
+interface MoveTaskAction extends TaskAction {
+  type: "MOVED";
+  index: number;
+  to: number; 
+  task: Task;
+}
+
 interface Props {
   children?: ReactNode;
 }
@@ -42,6 +54,7 @@ export const TasksDispatchContext = createContext<
         | DeletedTaskAction
         | CompletedToggledAction
         | AddTaskAction
+        | MoveTaskAction
     ]
   >
 >(
@@ -53,6 +66,7 @@ export const TasksDispatchContext = createContext<
         | DeletedTaskAction
         | CompletedToggledAction
         | AddTaskAction
+        | MoveTaskAction
     ]
   >
 );
@@ -77,6 +91,7 @@ export function taskReducer(
     | CompletedToggledAction
     | DeletedTaskAction
     | UpdatedTaskAction
+    | MoveTaskAction
 ): Tasks {
   switch (action.type) {
     case "ADDED":
@@ -108,6 +123,15 @@ export function taskReducer(
         }
         return task;
       });
+    case "MOVED":
+      const movedAction = action as MoveTaskAction;
+      const newTasks = tasks.filter((task) => task.id !== movedAction.task.id);
+      return [
+        ...newTasks.slice(0, movedAction.to),
+        {...movedAction.task},
+        ...newTasks.slice(movedAction.to),
+      ];
+
     default:
       throw new Error("Invalid action: " + action.type);
   }

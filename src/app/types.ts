@@ -12,4 +12,8 @@ export const initialTask: Task = {
 
 export type Tasks = Task[];
 
+export const DragTypes = {
+  TASK: 'task',
+}
+
 
