@@ -4,11 +4,11 @@ import { Task } from "@/app/types";
 import TaskComponent from "@/app/ui/Task";
 import { useDrag, useDrop } from "react-dnd";
 import { DragTypes } from "@/app/types";
+import { useContext } from "react";
+import { ActiveTaskContext } from "@/app/TaskListContext";
 
 interface TaskListItemProps {
   task: Task;
-  activeTaskId: number | null;
-  onActiveTask: (taskId: number) => void;
   moveTaskItem: (id: number, to: number) => void;
   findTaskItem: (id: number) => { index: number };
 }
@@ -20,11 +20,11 @@ interface TaskDragItem {
 
 export default function TaskListItem({
   task,
-  activeTaskId,
-  onActiveTask,
   moveTaskItem,
   findTaskItem,
 }: TaskListItemProps) {
+  const activeTaskId = useContext(ActiveTaskContext);
+
   const originalIndex = findTaskItem(task.id).index;
   const taskId = task.id;
 
@@ -59,8 +59,6 @@ export default function TaskListItem({
     [findTaskItem, moveTaskItem]
   );
 
-  //   const opacity = isDragging ? 0 : 1
-
   return (
     <li
       ref={(node) => preview(drop(node))}
@@ -85,7 +83,7 @@ export default function TaskListItem({
           width="20"
           height="20"
         />
-        <TaskComponent task={task} onActiveTask={onActiveTask} />
+        <TaskComponent task={task} />
       </div>
     </li>
   );

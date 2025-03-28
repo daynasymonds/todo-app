@@ -1,11 +1,8 @@
-import {
-  createContext,
-  useReducer,
-  ReactNode,
-  ActionDispatch,
-} from "react";
+import { createContext, useReducer, ReactNode, ActionDispatch } from "react";
 import { Task, Tasks } from "./types";
 import { initialTasks } from "@/app/data";
+
+const NO_ACTIVE_TASK_ID = -100;
 
 interface TaskAction {
   type: string;
@@ -36,8 +33,17 @@ interface UpdatedTaskAction extends TaskAction {
 interface MoveTaskAction extends TaskAction {
   type: "MOVED";
   index: number;
-  to: number; 
+  to: number;
   task: Task;
+}
+
+interface RemovedActiveTaskAction extends TaskAction {
+  type: "REMOVED_ACTIVE_TASK";
+}
+
+interface SetActiveTaskAction extends TaskAction {
+  type: "SET_ACTIVE_TASK";
+  taskId: number;
 }
 
 interface Props {
@@ -45,6 +51,16 @@ interface Props {
 }
 
 export const TasksContext = createContext<Tasks>([] as Tasks);
+export const ActiveTaskContext = createContext<number | null>(null);
+export const ActiveTaskDispatchContext = createContext<
+  ActionDispatch<
+    [action: TaskAction | SetActiveTaskAction | RemovedActiveTaskAction]
+  >
+>(
+  {} as ActionDispatch<
+    [action: TaskAction | SetActiveTaskAction | RemovedActiveTaskAction]
+  >
+);
 export const TasksDispatchContext = createContext<
   ActionDispatch<
     [
@@ -72,15 +88,38 @@ export const TasksDispatchContext = createContext<
 );
 
 export function TasksProvider({ children }: Props) {
+  const [activeTaskId, dispatchActiveTask] = useReducer(
+    activeTaskReducer,
+    null
+  );
   const [tasks, dispatch] = useReducer(taskReducer, initialTasks);
 
   return (
     <TasksContext.Provider value={tasks}>
-      <TasksDispatchContext.Provider value={dispatch}>
-        {children}
-      </TasksDispatchContext.Provider>
+      <ActiveTaskContext.Provider value={activeTaskId}>
+        <ActiveTaskDispatchContext.Provider value={dispatchActiveTask}>
+          <TasksDispatchContext.Provider value={dispatch}>
+            {children}
+          </TasksDispatchContext.Provider>
+        </ActiveTaskDispatchContext.Provider>
+      </ActiveTaskContext.Provider>
     </TasksContext.Provider>
   );
+}
+
+export function activeTaskReducer(
+  taskId: number | null,
+  action: TaskAction | SetActiveTaskAction | RemovedActiveTaskAction
+) {
+  switch (action.type) {
+    case "SET_ACTIVE_TASK":
+      const setAction = action as SetActiveTaskAction;
+      return setAction.taskId;
+    case "REMOVED_ACTIVE_TASK":
+      return NO_ACTIVE_TASK_ID;
+    default:
+      throw new Error("Invalid action: " + action.type);
+  }
 }
 
 export function taskReducer(
@@ -128,7 +167,7 @@ export function taskReducer(
       const newTasks = tasks.filter((task) => task.id !== movedAction.task.id);
       return [
         ...newTasks.slice(0, movedAction.to),
-        {...movedAction.task},
+        { ...movedAction.task },
         ...newTasks.slice(movedAction.to),
       ];
 

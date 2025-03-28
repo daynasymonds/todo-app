@@ -1,15 +1,15 @@
 import { useState, useContext, KeyboardEvent } from "react";
-import { TasksDispatchContext } from "@/app/TaskListContext";
-
-interface AddTaskProps {
-  onActiveTask: (taskId: number) => void;
-}
+import {
+  TasksDispatchContext,
+  ActiveTaskDispatchContext,
+} from "@/app/TaskListContext";
 
 let nextTaskId = 4;
 
-export default function AddTask({ onActiveTask }: AddTaskProps) {
+export default function AddTask() {
   const [content, setContent] = useState("");
-  const dispatch  = useContext(TasksDispatchContext);
+  const dispatch = useContext(TasksDispatchContext);
+  const activeTaskDispatch = useContext(ActiveTaskDispatchContext);
 
   return (
     <>
@@ -18,10 +18,14 @@ export default function AddTask({ onActiveTask }: AddTaskProps) {
         id="addTask"
         type="text"
         value={content}
-        onClick={() => onActiveTask(-1)}
-        onFocus={() => onActiveTask(-1)}
+        onClick={() =>
+          activeTaskDispatch({ type: "SET_ACTIVE_TASK", taskId: -1 })
+        }
+        onFocus={() =>
+          activeTaskDispatch({ type: "SET_ACTIVE_TASK", taskId: -1 })
+        }
         onChange={(e) => {
-          onActiveTask(-1);
+          activeTaskDispatch({ type: "SET_ACTIVE_TASK", taskId: -1 });
           setContent(e.currentTarget.value);
         }}
         onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -33,7 +37,7 @@ export default function AddTask({ onActiveTask }: AddTaskProps) {
             content: content,
           });
           setContent("");
-          onActiveTask(-10);
+          activeTaskDispatch({ type: "REMOVED_ACTIVE_TASK" });
         }}
         placeholder="List item"
       />

@@ -4,15 +4,18 @@ import sanitizeHtml from "sanitize-html";
 import { sanitizedConf } from "@/app/utils";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import Image from "next/image";
-import { TasksDispatchContext } from "@/app/TaskListContext";
+import {
+  TasksDispatchContext,
+  ActiveTaskDispatchContext,
+} from "@/app/TaskListContext";
 
 interface TaskProps {
   task: Task;
-  onActiveTask: (taskId: number) => void;
 }
 
-export default function Task({ task, onActiveTask }: TaskProps) {
+export default function Task({ task }: TaskProps) {
   const dispatch = useContext(TasksDispatchContext);
+  const activeTaskDispatch = useContext(ActiveTaskDispatchContext);
 
   const handleContentChange = useCallback(
     (e: ContentEditableEvent) => {
@@ -37,7 +40,10 @@ export default function Task({ task, onActiveTask }: TaskProps) {
         id={"completeTask" + task.id}
         checked={task.isCompleted}
         onChange={() => {
-          onActiveTask(task.id);
+          activeTaskDispatch({
+            type: "SET_ACTIVE_TASK",
+            taskId: task.id,
+          });
           dispatch({
             type: "COMPLETED_TOGGLED",
             id: task.id,
@@ -49,7 +55,12 @@ export default function Task({ task, onActiveTask }: TaskProps) {
         onChange={handleContentChange}
         onBlur={handleContentChange}
         html={task.content}
-        onClick={() => onActiveTask(task.id)}
+        onClick={() =>
+          activeTaskDispatch({
+            type: "SET_ACTIVE_TASK",
+            taskId: task.id,
+          })
+        }
       />
 
       <button
@@ -57,7 +68,9 @@ export default function Task({ task, onActiveTask }: TaskProps) {
           "w-[26px] h-[26px] justify-self-end place-items-center hidden cursor-pointer group-hover:block hover:bg-lighter-gray hover:rounded-full"
         }
         onClick={() => {
-          onActiveTask(task.id);
+          activeTaskDispatch({
+            type: "REMOVED_ACTIVE_TASK",
+          });
           dispatch({
             type: "DELETED",
             id: task.id,
