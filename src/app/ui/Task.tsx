@@ -1,4 +1,4 @@
-import { Task } from "@/app/types";
+import type { Task } from "@/app/types";
 import { useCallback, useContext } from "react";
 import sanitizeHtml from "sanitize-html";
 import { sanitizedConf } from "@/app/utils";
@@ -8,6 +8,7 @@ import {
   TasksDispatchContext,
   ActiveTaskDispatchContext,
 } from "@/app/TaskListContext";
+import clsx from "clsx";
 
 interface TaskProps {
   task: Task;
@@ -52,6 +53,7 @@ export default function Task({ task }: TaskProps) {
         }}
       />
       <ContentEditable
+        className={clsx("", { "line-through": task.isCompleted === true })}
         onChange={handleContentChange}
         onBlur={handleContentChange}
         html={task.content}

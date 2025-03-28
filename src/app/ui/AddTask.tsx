@@ -3,6 +3,7 @@ import {
   TasksDispatchContext,
   ActiveTaskDispatchContext,
 } from "@/app/TaskListContext";
+import Image from "next/image";
 
 let nextTaskId = 4;
 
@@ -13,7 +14,7 @@ export default function AddTask() {
 
   return (
     <>
-      <label>+</label>{" "}
+      <label><Image className={"opacity-45"} src="./add.svg" width="18" height="18" alt="Add item"/></label>{" "}
       <input
         id="addTask"
         type="text"
