@@ -11,12 +11,13 @@ export default function Card() {
         "grid grid-cols-1 py-4 md:border-1 md:border-gray-200 md:rounded-lg md:w-[600px]"
       }
     >
-      <DndProvider backend={HTML5Backend}>
-        <TasksProvider>
-          <TaskListTitle />
+      <TasksProvider>
+        <TaskListTitle />
+        <DndProvider backend={HTML5Backend}>
           <TaskList />
-        </TasksProvider>
-      </DndProvider>
+        </DndProvider>
+      </TasksProvider>
+
       {/* <div className={"border-light-gray border-b-1"} /> */}
     </div>
   );
