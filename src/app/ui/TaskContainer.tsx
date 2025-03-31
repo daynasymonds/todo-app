@@ -20,7 +20,7 @@ export default function TaskContainer() {
   return (
     <div
       className={
-        "grid grid-cols-1 py-4 md:border-1 md:border-gray-200 md:rounded-lg md:w-[600px]"
+        "grid grid-cols-1 py-4 text-left border-1 border-gray-200 rounded-lg w-[600px]"
       }
       onKeyDown={removeActiveTask}
     >
