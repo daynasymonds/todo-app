@@ -69,7 +69,7 @@ export default function TaskList() {
       >
         <div
           className={
-            "grid grid-cols-[24px_1fr] pl-[20px] items-center gap-2 w-full h-8"
+            "grid grid-cols-[24px_1fr] pl-[24px] items-center gap-2 w-full h-8"
           }
         >
           <AddTask />
