@@ -19,7 +19,7 @@ export default function CompletedTaskList() {
       ></div>
       <div
         className={
-          "grid grid-cols-[24px_1fr] gap-2 pl-[35px] items-center text-l cursor-pointer"
+          "grid grid-cols-[24px_1fr] gap-2 pl-[40px] items-center text-l cursor-pointer"
         }
         onClick={() => setIsExpanded(!isExpanded)}
       >

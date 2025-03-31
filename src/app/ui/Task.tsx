@@ -4,6 +4,8 @@ import sanitizeHtml from "sanitize-html";
 import { sanitizedConf } from "@/app/utils";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import Image from "next/image";
+import Checkbox from "@/app/ui/Checkbox";
+
 import {
   TasksDispatchContext,
   ActiveTaskDispatchContext,
@@ -34,8 +36,24 @@ export default function Task({ task }: TaskProps) {
   );
 
   return (
-    <div className="grid grid-cols-[24px_1fr_32px] gap-2 items-center  w-full">
-      <input
+    <div className="grid grid-cols-[24px_1fr_32px] gap-2 justify-center items-center  w-full">
+      <Checkbox
+        id={"completeTask" + task.id}
+        className={"justify-self-start"}
+        isChecked={task.isCompleted}
+        onChange={() => {
+          activeTaskDispatch({
+            type: "SET_ACTIVE_TASK",
+            taskId: task.id,
+          });
+          dispatch({
+            type: "COMPLETED_TOGGLED",
+            id: task.id,
+            isCompleted: !task.isCompleted,
+          });
+        }}
+      />
+      {/* <input
         className={"justify-self-start"}
         type="checkbox"
         id={"completeTask" + task.id}
@@ -51,9 +69,11 @@ export default function Task({ task }: TaskProps) {
             isCompleted: !task.isCompleted,
           });
         }}
-      />
+      /> */}
       <ContentEditable
-        className={clsx("", { "line-through": task.isCompleted === true })}
+        className={clsx("", {
+          "line-through": task.isCompleted === true,
+        })}
         onChange={handleContentChange}
         onBlur={handleContentChange}
         html={task.content}
