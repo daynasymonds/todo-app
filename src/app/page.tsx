@@ -1,7 +1,7 @@
 "use client";
 
-import Card from "@/app/ui/Card";
+import Panel from "@/app/ui/Panel";
 
 export default function App() {
-  return <Card />;
+  return <Panel />;
 }
