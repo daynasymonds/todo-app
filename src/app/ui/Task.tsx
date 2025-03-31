@@ -53,23 +53,7 @@ export default function Task({ task }: TaskProps) {
           });
         }}
       />
-      {/* <input
-        className={"justify-self-start"}
-        type="checkbox"
-        id={"completeTask" + task.id}
-        checked={task.isCompleted}
-        onChange={() => {
-          activeTaskDispatch({
-            type: "SET_ACTIVE_TASK",
-            taskId: task.id,
-          });
-          dispatch({
-            type: "COMPLETED_TOGGLED",
-            id: task.id,
-            isCompleted: !task.isCompleted,
-          });
-        }}
-      /> */}
+      
       <ContentEditable
         className={clsx("", {
           "line-through": task.isCompleted === true,
