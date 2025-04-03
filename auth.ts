@@ -1,14 +1,21 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import type { User } from "@/app/types";
 import bcrypt from "bcrypt";
 import sql from "@/app/lib/db";
 
-async function getUser(email: string): Promise<User | undefined> {
+const SignInSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8).max(32),
+});
+
+async function getUser(email: string): Promise<User> {
   try {
-    const user = await sql<User[]>`SELECT * FROM users WHERE email=${email}`;
+    const user = await sql<
+      User[]
+    >`SELECT * FROM users WHERE email=${email}`;
     return user[0];
   } catch (error) {
     console.error("Failed to fetch user:", error);
@@ -20,21 +27,30 @@ export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
-      async authorize(credentials) {
-        const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
-          .safeParse(credentials);
-
-        if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
+      credentials: {
+        email: {},
+        password: {},
+      },
+      authorize: async (credentials) => {
+        try {
+          const { email, password } = await SignInSchema.parseAsync(
+            credentials
+          );
+          
           const user = await getUser(email);
-          if (!user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-
-          if (passwordsMatch) return user;
+          if (user) {
+            const isPassword = await bcrypt.compare(password, user.password);
+            if (isPassword) {
+              return user;
+            }
+          }
+          
+        } catch (error) {
+          if (error instanceof ZodError) {
+            console.log("credentials object is not expected format");
+            return null;
+          }
         }
-
-        console.log("Invalid credentials");
         return null;
       },
     }),

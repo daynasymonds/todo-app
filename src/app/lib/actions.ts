@@ -7,7 +7,7 @@ import sql from "@/app/lib/db";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 
-export type SignupState = {
+type SignupState = {
   errors?: {
     email?: string[];
     password?: string[];
@@ -22,6 +22,7 @@ const SignupFormSchema = z
     password: z
       .string()
       .min(8)
+      .max(32)
       .refine(
         (p) => /[a-zA-Z]+/g.test(p ?? ""),
         "Password must contain at least one letter."
@@ -48,6 +49,7 @@ export async function authenticate(
   try {
     await signIn("credentials", formData);
   } catch (error) {
+    console.log(error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
