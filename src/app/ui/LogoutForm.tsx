@@ -5,6 +5,7 @@ import { useActionState } from "react";
 
 export default function LogoutForm() {
   const [, signoutAction] = useActionState(logOut, "");
+
   return (
     <form action={signoutAction}>
       <p>

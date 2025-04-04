@@ -23,7 +23,7 @@ async function getUser(email: string): Promise<User> {
   }
 }
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -41,6 +41,9 @@ export const { auth, signIn, signOut } = NextAuth({
           if (user) {
             const isPassword = await bcrypt.compare(password, user.password);
             if (isPassword) {
+              console.log("User found:", user);
+              const session = auth();
+              console.log("credsProvider: Session:", session);
               return user;
             }
           }

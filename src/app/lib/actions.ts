@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import z from "zod";
 import sql from "@/app/lib/db";
@@ -47,13 +47,16 @@ export async function authenticate(
   formData: FormData
 ) {
   try {
+    console.log("authenicating...");
     await signIn("credentials", formData);
+    const session = await auth();
+    console.log("Session:", session);
   } catch (error) {
     console.log(error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return "Invalid credentials.";
+          return "Something went wrong during sign in.";
         default:
           return "Something went wrong.";
       }
