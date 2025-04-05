@@ -109,6 +109,7 @@ export async function signUp(prevState: SignupState, formData: FormData) {
         ON CONFLICT (id) DO NOTHING;
       `;
   } catch (error) {
+    console.log(error);
     return {
       message: "Database Error: failed to create account.",
     } as SignupState;

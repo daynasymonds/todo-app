@@ -2,8 +2,6 @@
 
 import { SessionProvider } from "next-auth/react";
 import Panel from "@/app/ui/Panel";
-import LogoutForm from "@/src/app/ui/LogoutForm";
-import Link from "next/link";
 import LandingPage from "@/src/app/ui/LandingPage";
 
 export default function App() {
