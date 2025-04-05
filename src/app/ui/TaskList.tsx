@@ -10,12 +10,15 @@ import {
 } from "@/app/TaskListContext";
 import { DragTypes } from "@/app/types";
 import { useDrop } from "react-dnd";
+import { getNextPosition, getNextTaskId } from "@/src/app/utils";
 
 export default function TaskList() {
   const allTasks = useContext(TasksContext);
-  const tasks = allTasks.filter((task) => task.isCompleted === false);
+  const tasks = allTasks.tasks;
   const dispatch = useContext(TasksDispatchContext);
 
+  const nextTaskId = getNextTaskId(tasks);
+  const nextTaskPosition = getNextPosition(tasks);
   const activeTaskId = useContext(ActiveTaskContext);
 
   const findTaskItem = useCallback(
@@ -72,7 +75,7 @@ export default function TaskList() {
             "grid grid-cols-[24px_1fr] pl-[24px] items-center gap-2 w-full h-8"
           }
         >
-          <AddTask />
+          <AddTask nextTaskId={nextTaskId} nextPosition={nextTaskPosition} />
         </div>
       </li>
     </ul>

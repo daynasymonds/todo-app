@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, signIn, signOut } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import z from "zod";
 import sql from "@/app/lib/db";
@@ -47,10 +47,7 @@ export async function authenticate(
   formData: FormData
 ) {
   try {
-    console.log("authenicating...");
     await signIn("credentials", formData);
-    const session = await auth();
-    console.log("Session:", session);
   } catch (error) {
     console.log(error);
     if (error instanceof AuthError) {

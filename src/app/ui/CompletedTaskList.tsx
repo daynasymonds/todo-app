@@ -6,7 +6,7 @@ import clsx from "clsx";
 
 export default function CompletedTaskList() {
   const allTasks = useContext(TasksContext);
-  const tasks = allTasks.filter((task) => task.isCompleted === true);
+  const tasks = allTasks.completedTasks;
 
   const [isExpanded, setIsExpanded] = useState(false);
 

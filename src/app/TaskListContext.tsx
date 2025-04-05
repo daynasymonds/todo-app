@@ -1,6 +1,7 @@
 import { createContext, useReducer, ReactNode, ActionDispatch } from "react";
-import { Task, Tasks } from "./types";
-import { initialTasks } from "@/app/data";
+import { Task, Tasks, TasksDto } from "./types";
+import { initialTasksDto } from "@/app/data";
+import { sortTasks } from "@/src/app/utils";
 
 const NO_ACTIVE_TASK_ID = -100;
 
@@ -12,10 +13,17 @@ interface AddTaskAction extends TaskAction {
   type: "ADDED";
   id: number;
   content: string;
+  position: number;
 }
 
-interface CompletedToggledAction extends TaskAction {
-  type: "COMPLETED_TOGGLED";
+interface MarkedCompleteAction extends TaskAction {
+  type: "MARKED_COMPLETE";
+  id: number;
+  isCompleted: boolean;
+}
+
+interface MarkedInpcompleteAction extends TaskAction {
+  type: "MARKED_INCOMPLETE";
   id: number;
   isCompleted: boolean;
 }
@@ -50,7 +58,7 @@ interface Props {
   children?: ReactNode;
 }
 
-export const TasksContext = createContext<Tasks>([] as Tasks);
+export const TasksContext = createContext<TasksDto>({} as TasksDto);
 export const ActiveTaskContext = createContext<number | null>(null);
 export const ActiveTaskDispatchContext = createContext<
   ActionDispatch<
@@ -68,7 +76,7 @@ export const TasksDispatchContext = createContext<
         | TaskAction
         | UpdatedTaskAction
         | DeletedTaskAction
-        | CompletedToggledAction
+        | MarkedCompleteAction
         | AddTaskAction
         | MoveTaskAction
     ]
@@ -80,7 +88,7 @@ export const TasksDispatchContext = createContext<
         | TaskAction
         | UpdatedTaskAction
         | DeletedTaskAction
-        | CompletedToggledAction
+        | MarkedCompleteAction
         | AddTaskAction
         | MoveTaskAction
     ]
@@ -92,10 +100,10 @@ export function TasksProvider({ children }: Props) {
     activeTaskReducer,
     null
   );
-  const [tasks, dispatch] = useReducer(taskReducer, initialTasks);
+  const [tasksDto, dispatch] = useReducer(taskReducer, initialTasksDto);
 
   return (
-    <TasksContext.Provider value={tasks}>
+    <TasksContext.Provider value={tasksDto}>
       <ActiveTaskContext.Provider value={activeTaskId}>
         <ActiveTaskDispatchContext.Provider value={dispatchActiveTask}>
           <TasksDispatchContext.Provider value={dispatch}>
@@ -123,53 +131,85 @@ export function activeTaskReducer(
 }
 
 export function taskReducer(
-  tasks: Tasks,
+  tasksDto: TasksDto,
   action:
     | TaskAction
     | AddTaskAction
-    | CompletedToggledAction
+    | MarkedCompleteAction
     | DeletedTaskAction
     | UpdatedTaskAction
     | MoveTaskAction
-): Tasks {
+): TasksDto {
   switch (action.type) {
     case "ADDED":
       const addedAction = action as AddTaskAction;
-      return [
-        ...tasks,
-        {
-          id: addedAction.id,
-          content: addedAction.content,
-          isCompleted: false,
-        },
-      ];
-    case "COMPLETED_TOGGLED":
-      const completedAction = action as CompletedToggledAction;
-      return tasks.map((task) => {
-        if (task.id === completedAction.id) {
-          return { ...task, isCompleted: completedAction.isCompleted };
-        }
-        return task;
-      });
+      return {
+        ...tasksDto,
+        tasks: sortTasks([
+          ...tasksDto.tasks,
+          {
+            id: addedAction.id,
+            content: addedAction.content,
+            isCompleted: false,
+            position: addedAction.position,
+          },
+        ]),
+      };
+    case "MARKED_COMPLETE":
+      const completedAction = action as MarkedCompleteAction;
+      const completedTask = tasksDto.tasks.find(
+        (task) => task.id === completedAction.id
+      ) as Task;
+      return {
+        ...tasksDto,
+        tasks: tasksDto.tasks.filter((task) => task.id !== completedAction.id),
+        completedTasks: [
+          ...tasksDto.completedTasks,
+          { ...completedTask, isCompleted: true },
+        ],
+      };
+    case "MARKED_INCOMPLETE":
+      const incompleteAction = action as MarkedInpcompleteAction;
+      const incompleteTask = tasksDto.completedTasks.find(
+        (task) => task.id === incompleteAction.id
+      ) as Task;
+      return {
+        ...tasksDto,
+        completedTasks: tasksDto.completedTasks.filter(
+          (task) => task.id !== incompleteAction.id
+        ),
+        tasks: [...tasksDto.tasks, { ...incompleteTask, isCompleted: false }],
+      };
     case "DELETED":
       const deletedAction = action as DeletedTaskAction;
-      return tasks.filter((task) => task.id !== deletedAction.id);
+      return {
+        ...tasksDto,
+        tasks: tasksDto.tasks.filter((task) => task.id !== deletedAction.id),
+      };
     case "UPDATED":
       const updatedAction = action as UpdatedTaskAction;
-      return tasks.map((task) => {
-        if (task.id === updatedAction.task.id) {
-          return updatedAction.task;
-        }
-        return task;
-      });
+      return {
+        ...tasksDto,
+        tasks: tasksDto.tasks.map((task) => {
+          if (task.id === updatedAction.task.id) {
+            return updatedAction.task;
+          }
+          return task;
+        }),
+      };
     case "MOVED":
       const movedAction = action as MoveTaskAction;
-      const newTasks = tasks.filter((task) => task.id !== movedAction.task.id);
-      return [
-        ...newTasks.slice(0, movedAction.to),
-        { ...movedAction.task },
-        ...newTasks.slice(movedAction.to),
-      ];
+      const newTasks = tasksDto.tasks.filter(
+        (task) => task.id !== movedAction.task.id
+      );
+      return {
+        ...tasksDto,
+        tasks: [
+          ...newTasks.slice(0, movedAction.to),
+          { ...movedAction.task },
+          ...newTasks.slice(movedAction.to),
+        ],
+      };
 
     default:
       throw new Error("Invalid action: " + action.type);

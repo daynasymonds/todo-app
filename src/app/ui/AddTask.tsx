@@ -5,9 +5,12 @@ import {
 } from "@/app/TaskListContext";
 import Image from "next/image";
 
-let nextTaskId = 4;
+interface AddTaskProps {
+  nextTaskId: number;
+  nextPosition: number;
+}
 
-export default function AddTask() {
+export default function AddTask({nextTaskId, nextPosition}: AddTaskProps) {
   const [content, setContent] = useState("");
   const dispatch = useContext(TasksDispatchContext);
   const activeTaskDispatch = useContext(ActiveTaskDispatchContext);
@@ -34,8 +37,9 @@ export default function AddTask() {
           e.preventDefault();
           dispatch({
             type: "ADDED",
-            id: nextTaskId++,
+            id: nextTaskId,
             content: content,
+            position: nextPosition,
           });
           setContent("");
           activeTaskDispatch({ type: "REMOVED_ACTIVE_TASK" });

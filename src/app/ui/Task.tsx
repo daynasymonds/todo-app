@@ -20,6 +20,8 @@ export default function Task({ task }: TaskProps) {
   const dispatch = useContext(TasksDispatchContext);
   const activeTaskDispatch = useContext(ActiveTaskDispatchContext);
 
+  const completedToggleDispatchType = task.isCompleted ? "MARKED_INCOMPLETE" : "MARKED_COMPLETE";
+
   const handleContentChange = useCallback(
     (e: ContentEditableEvent) => {
       const updatedTask = {
@@ -47,7 +49,7 @@ export default function Task({ task }: TaskProps) {
             taskId: task.id,
           });
           dispatch({
-            type: "COMPLETED_TOGGLED",
+            type: completedToggleDispatchType,
             id: task.id,
             isCompleted: !task.isCompleted,
           });
