@@ -185,6 +185,9 @@ export function taskReducer(
       return {
         ...tasksDto,
         tasks: tasksDto.tasks.filter((task) => task.id !== deletedAction.id),
+        completedTasks: tasksDto.completedTasks.filter(
+          (task) => task.id !== deletedAction.id
+        ),
       };
     case "UPDATED":
       const updatedAction = action as UpdatedTaskAction;
