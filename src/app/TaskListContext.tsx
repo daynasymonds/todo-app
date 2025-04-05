@@ -1,7 +1,6 @@
 import { createContext, useReducer, ReactNode, ActionDispatch } from "react";
 import { Task, Tasks, TasksDto } from "./types";
 import { initialTasksDto } from "@/app/data";
-import { sortTasks } from "@/src/app/utils";
 
 const NO_ACTIVE_TASK_ID = -100;
 
@@ -145,7 +144,7 @@ export function taskReducer(
       const addedAction = action as AddTaskAction;
       return {
         ...tasksDto,
-        tasks: sortTasks([
+        tasks: sortTasksByPosition([
           ...tasksDto.tasks,
           {
             id: addedAction.id,
@@ -178,7 +177,7 @@ export function taskReducer(
         completedTasks: tasksDto.completedTasks.filter(
           (task) => task.id !== incompleteAction.id
         ),
-        tasks: [...tasksDto.tasks, { ...incompleteTask, isCompleted: false }],
+        tasks: sortTasksByPosition([...tasksDto.tasks, { ...incompleteTask, isCompleted: false }]),
       };
     case "DELETED":
       const deletedAction = action as DeletedTaskAction;
@@ -207,14 +206,25 @@ export function taskReducer(
       );
       return {
         ...tasksDto,
-        tasks: [
+        tasks: updateTaskPositions([
           ...newTasks.slice(0, movedAction.to),
           { ...movedAction.task },
           ...newTasks.slice(movedAction.to),
-        ],
+        ]),
       };
 
     default:
       throw new Error("Invalid action: " + action.type);
   }
+}
+
+function sortTasksByPosition(tasks: Tasks): Tasks {
+  return tasks.sort((a: Task, b: Task) => a.position - b.position);
+}
+
+function updateTaskPositions(tasks: Tasks): Tasks {
+  return tasks.map((task, index) => ({
+    ...task,
+    position: index,
+  }));
 }

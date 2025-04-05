@@ -17,8 +17,6 @@ export const sanitizedConf = {
     return Math.max(...ids, 0) + 1;
   }
 
-  export function sortTasks(tasks: Tasks): Tasks {
-    return tasks.sort((a: Task, b: Task) => a.position - b.position);
-  }
+
 
   
