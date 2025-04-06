@@ -31,8 +31,12 @@ To do:
 * tests
 
 * handle completed items list
-    * if any completed items exist, a separate todo list should appear under a horizontal line of the todo list
+    * if no completed items exist, "completed items" sections should not show
 * handle many todo cards
     * a dashboard should allow to create a new todo card
     * existing todo cards should be presented in a section below
     * clicking on a todo card should present the card in front of other content.
+* reset password functionality
+* oauth login
+* cleanup, comments, lint
+* tests
