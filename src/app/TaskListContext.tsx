@@ -1,6 +1,13 @@
-import { createContext, useReducer, ReactNode, ActionDispatch } from "react";
+import {
+  createContext,
+  useReducer,
+  useEffect,
+  useState,
+  ReactNode,
+  ActionDispatch,
+} from "react";
 import { Task, Tasks, TasksDto } from "./types";
-import { initialTasksDto } from "@/app/data";
+import { getTaskData } from "./data";
 
 const NO_ACTIVE_TASK_ID = -100;
 
@@ -54,6 +61,7 @@ interface SetActiveTaskAction extends TaskAction {
 }
 
 interface Props {
+  userId: string | undefined;
   children?: ReactNode;
 }
 
@@ -94,15 +102,41 @@ export const TasksDispatchContext = createContext<
   >
 );
 
-export function TasksProvider({ children }: Props) {
+const emptyTasksDto = {
+  tasks: [],
+  completedTasks: [],
+  user: null,
+} as TasksDto;
+
+export function TasksProvider({ userId, children }: Props) {
+  const [initialTasksDto, setInitialTasksDto] =
+    useState<TasksDto>(emptyTasksDto);
   const [activeTaskId, dispatchActiveTask] = useReducer(
     activeTaskReducer,
     null
   );
-  const [tasksDto, dispatch] = useReducer(taskReducer, initialTasksDto);
+
+  useEffect(() => {
+    let ignore = false;
+    getTaskData(userId).then((data) => {
+      if (!ignore) {
+        setInitialTasksDto(data);
+      }
+      return () => {
+        ignore = true;
+      };
+    });
+  }, [userId]);
+
+  const [, dispatch] = useReducer(taskReducer, initialTasksDto);
+  const isLoading = initialTasksDto.tasks.length === 0;
+
+  if (isLoading) {
+    return <TaskPanelLoading />;
+  }
 
   return (
-    <TasksContext.Provider value={tasksDto}>
+    <TasksContext.Provider value={initialTasksDto}>
       <ActiveTaskContext.Provider value={activeTaskId}>
         <ActiveTaskDispatchContext.Provider value={dispatchActiveTask}>
           <TasksDispatchContext.Provider value={dispatch}>
@@ -112,6 +146,10 @@ export function TasksProvider({ children }: Props) {
       </ActiveTaskContext.Provider>
     </TasksContext.Provider>
   );
+}
+
+function TaskPanelLoading() {
+  return <h2>Loading ...</h2>;
 }
 
 export function activeTaskReducer(
@@ -177,7 +215,10 @@ export function taskReducer(
         completedTasks: tasksDto.completedTasks.filter(
           (task) => task.id !== incompleteAction.id
         ),
-        tasks: sortTasksByPosition([...tasksDto.tasks, { ...incompleteTask, isCompleted: false }]),
+        tasks: sortTasksByPosition([
+          ...tasksDto.tasks,
+          { ...incompleteTask, isCompleted: false },
+        ]),
       };
     case "DELETED":
       const deletedAction = action as DeletedTaskAction;
