@@ -1,6 +1,6 @@
 import { ActiveTaskContext } from "@/app/TaskListContext";
 import { Task } from "@/src/app/lib/types";
-import TaskComponent from "@/app/ui/Task";
+import TaskComponent from "@/src/app/ui/task/Task";
 import clsx from "clsx";
 import { useContext } from "react";
 

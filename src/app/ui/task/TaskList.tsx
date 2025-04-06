@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
-import AddTask from "@/app/ui/AddTask";
-import TaskListItem from "@/app/ui/TaskListItem";
+import AddTask from "@/src/app/ui/task/AddTask";
+import TaskListItem from "@/src/app/ui/task/TaskListItem";
 import { Task } from "@/src/app/lib/types";
 import clsx from "clsx";
 import {

@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { TasksContext } from "@/app/TaskListContext";
-import CompletedTaskListItem from "@/app/ui/CompletedTaskListItem";
+import CompletedTaskListItem from "@/src/app/ui/task/CompletedTaskListItem";
 import Image from "next/image";
 import clsx from "clsx";
 

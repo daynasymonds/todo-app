@@ -1,7 +1,6 @@
 import { TasksProvider } from "@/app/TaskListContext";
-import TaskContainer from "@/app/ui/TaskContainer";
+import TaskContainer from "@/src/app/ui/task/TaskContainer";
 import { useSession } from "next-auth/react";
-
 
 export default function Panel() {
   const { data: session } = useSession();
