@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import Image from "next/image";
-import { Task } from "@/app/types";
+import { Task } from "@/src/app/lib/types";
 import TaskComponent from "@/app/ui/Task";
 import { useDrag, useDrop } from "react-dnd";
-import { DragTypes } from "@/app/types";
+import { DragTypes } from "@/src/app/lib/types";
 import { useContext } from "react";
 import { ActiveTaskContext } from "@/app/TaskListContext";
 

@@ -1,7 +1,7 @@
-import type { Task } from "@/app/types";
+import type { Task } from "@/src/app/lib/types";
 import { useCallback, useContext } from "react";
 import sanitizeHtml from "sanitize-html";
-import { sanitizedConf } from "@/app/utils";
+import { sanitizedConf } from "@/src/app/lib/utils";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import Image from "next/image";
 import Checkbox from "@/app/ui/Checkbox";
@@ -20,7 +20,9 @@ export default function Task({ task }: TaskProps) {
   const dispatch = useContext(TasksDispatchContext);
   const activeTaskDispatch = useContext(ActiveTaskDispatchContext);
 
-  const completedToggleDispatchType = task.isCompleted ? "MARKED_INCOMPLETE" : "MARKED_COMPLETE";
+  const completedToggleDispatchType = task.isCompleted
+    ? "MARKED_INCOMPLETE"
+    : "MARKED_COMPLETE";
 
   const handleContentChange = useCallback(
     (e: ContentEditableEvent) => {
@@ -55,7 +57,7 @@ export default function Task({ task }: TaskProps) {
           });
         }}
       />
-      
+
       <ContentEditable
         className={clsx("", {
           "line-through": task.isCompleted === true,

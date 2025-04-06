@@ -6,8 +6,8 @@ import {
   ReactNode,
   ActionDispatch,
 } from "react";
-import { Task, Tasks, TasksDto } from "./types";
-import { getTaskData } from "./data";
+import { Task, Tasks, TasksDto } from "./lib/types";
+import { getTaskData } from "./lib/data";
 
 const NO_ACTIVE_TASK_ID = -100;
 
