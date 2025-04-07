@@ -1,16 +1,18 @@
+"use client";
+
 import { useCallback, useContext } from "react";
-import AddTask from "@/src/app/ui/task/AddTask";
-import TaskListItem from "@/src/app/ui/task/TaskListItem";
-import { Task } from "@/src/app/lib/types";
+import AddTask from "@/app/ui/task/AddTask";
+import TaskListItem from "@/app/ui/task/TaskListItem";
+import { Task } from "@/app/lib/types";
 import clsx from "clsx";
 import {
   ActiveTaskContext,
   TasksContext,
   TasksDispatchContext,
 } from "@/app/TaskListContext";
-import { DragTypes } from "@/src/app/lib/types";
+import { DragTypes } from "@/app/lib/types";
 import { useDrop } from "react-dnd";
-import { getNextPosition, getNextTaskId } from "@/src/app/lib/utils";
+import { getNextPosition, getNextTaskId } from "@/app/lib/utils";
 
 export default function TaskList() {
   const allTasks = useContext(TasksContext);

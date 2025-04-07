@@ -1,8 +1,10 @@
-import TaskListTitle from "@/src/app/ui/task/TaskListTitle";
-import TaskList from "@/src/app/ui/task/TaskList";
+"use client";
+
+import TaskListTitle from "@/app/ui/task/TaskListTitle";
+import TaskList from "@/app/ui/task/TaskList";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import CompletedTaskList from "@/src/app/ui/task/CompletedTaskList";
+import CompletedTaskList from "@/app/ui/task/CompletedTaskList";
 import { useContext, KeyboardEvent } from "react";
 import { ActiveTaskDispatchContext } from "@/app/TaskListContext";
 

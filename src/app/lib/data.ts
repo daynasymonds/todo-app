@@ -12,11 +12,5 @@ export const initialTasks: Task[] = [
 export const initialTasksDto: TasksDto = {
   tasks: initialTasks.filter((task) => task.isCompleted === false),
   completedTasks: initialTasks.filter((task) => task.isCompleted === true),
-  user: null,
+  userId: null,
 };
-
-export async function getTaskData(
-  userId: string | undefined
-): Promise<TasksDto> {
-  return initialTasksDto;
-}

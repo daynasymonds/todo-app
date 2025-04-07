@@ -17,8 +17,14 @@ export type Tasks = Task[];
 export type TasksDto = {
   tasks: Tasks;
   completedTasks: Tasks;
-  user: User | null;
+  userId: string | null;
 }
+
+export const emptyTasksDto = {
+  tasks: [],
+  completedTasks: [],
+  userId: null,
+} as TasksDto;
 
 export const DragTypes = {
   TASK: 'task',
@@ -29,6 +35,15 @@ export type User = {
   name: string;
   email: string;
   password: string;
+};
+
+export type SignupState = {
+  errors?: {
+    email?: string[];
+    password?: string[];
+    confirm?: string[];
+  };
+  message?: string | null;
 };
 
 

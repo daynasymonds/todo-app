@@ -2,7 +2,7 @@ import Link from "next/link";
 import LogoutForm from "@/app/ui/LogoutForm";
 import { auth } from "@/auth";
 
-export default async function LandingPage() {
+export default async function LandingBlurb() {
   const session = await auth();
   if (!session) {
     return <SignedOutLandingPage />;

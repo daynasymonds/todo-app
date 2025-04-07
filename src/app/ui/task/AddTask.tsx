@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useContext, KeyboardEvent } from "react";
 import {
   TasksDispatchContext,
@@ -10,14 +12,22 @@ interface AddTaskProps {
   nextPosition: number;
 }
 
-export default function AddTask({nextTaskId, nextPosition}: AddTaskProps) {
+export default function AddTask({ nextTaskId, nextPosition }: AddTaskProps) {
   const [content, setContent] = useState("");
   const dispatch = useContext(TasksDispatchContext);
   const activeTaskDispatch = useContext(ActiveTaskDispatchContext);
 
   return (
     <>
-      <label><Image className={"opacity-45"} src="./add.svg" width="18" height="18" alt="Add item"/></label>{" "}
+      <label>
+        <Image
+          className={"opacity-45"}
+          src="./add.svg"
+          width="18"
+          height="18"
+          alt="Add item"
+        />
+      </label>{" "}
       <input
         id="addTask"
         type="text"

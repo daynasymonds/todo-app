@@ -1,11 +1,12 @@
-import type { Task } from "@/src/app/lib/types";
+"use client";
+
+import type { Task } from "@/app/lib/types";
 import { useCallback, useContext } from "react";
 import sanitizeHtml from "sanitize-html";
-import { sanitizedConf } from "@/src/app/lib/utils";
+import { sanitizedConf } from "@/app/lib/utils";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import Image from "next/image";
 import Checkbox from "@/app/ui/Checkbox";
-
 import {
   TasksDispatchContext,
   ActiveTaskDispatchContext,

@@ -7,7 +7,9 @@ import {
 } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "@/app/ui/Button";
-import { signUp, SignupState } from "@/app/lib/actions";
+import { signUp } from "@/app/lib/actions";
+import { SignupState } from "@/app/lib/types";
+
 import { useActionState, useState } from "react";
 import { useSearchParams } from "next/navigation";
 

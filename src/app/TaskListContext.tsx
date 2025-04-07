@@ -1,13 +1,7 @@
-import {
-  createContext,
-  useReducer,
-  useEffect,
-  useState,
-  ReactNode,
-  ActionDispatch,
-} from "react";
-import { Task, Tasks, TasksDto } from "./lib/types";
-import { getTaskData } from "./lib/data";
+"use client";
+
+import { createContext, useReducer, ReactNode, ActionDispatch } from "react";
+import { Task, Tasks, TasksDto } from "@/app/lib/types";
 
 const NO_ACTIVE_TASK_ID = -100;
 
@@ -51,6 +45,11 @@ interface MoveTaskAction extends TaskAction {
   task: Task;
 }
 
+interface LoggedInAction extends TaskAction {
+  type: "LOGGED_IN";
+  userId: string;
+}
+
 interface RemovedActiveTaskAction extends TaskAction {
   type: "REMOVED_ACTIVE_TASK";
 }
@@ -61,7 +60,7 @@ interface SetActiveTaskAction extends TaskAction {
 }
 
 interface Props {
-  userId: string | undefined;
+  tasksDto: TasksDto;
   children?: ReactNode;
 }
 
@@ -86,6 +85,7 @@ export const TasksDispatchContext = createContext<
         | MarkedCompleteAction
         | AddTaskAction
         | MoveTaskAction
+        | LoggedInAction
     ]
   >
 >(
@@ -98,45 +98,20 @@ export const TasksDispatchContext = createContext<
         | MarkedCompleteAction
         | AddTaskAction
         | MoveTaskAction
+        | LoggedInAction
     ]
   >
 );
 
-const emptyTasksDto = {
-  tasks: [],
-  completedTasks: [],
-  user: null,
-} as TasksDto;
-
-export function TasksProvider({ userId, children }: Props) {
-  const [initialTasksDto, setInitialTasksDto] =
-    useState<TasksDto>(emptyTasksDto);
+export function TasksProvider({ tasksDto, children }: Props) {
   const [activeTaskId, dispatchActiveTask] = useReducer(
     activeTaskReducer,
     null
   );
-
-  useEffect(() => {
-    let ignore = false;
-    getTaskData(userId).then((data) => {
-      if (!ignore) {
-        setInitialTasksDto(data);
-      }
-      return () => {
-        ignore = true;
-      };
-    });
-  }, [userId]);
-
-  const [, dispatch] = useReducer(taskReducer, initialTasksDto);
-  const isLoading = initialTasksDto.tasks.length === 0;
-
-  if (isLoading) {
-    return <TaskPanelLoading />;
-  }
+  const [, dispatch] = useReducer(taskReducer, tasksDto);
 
   return (
-    <TasksContext.Provider value={initialTasksDto}>
+    <TasksContext.Provider value={tasksDto}>
       <ActiveTaskContext.Provider value={activeTaskId}>
         <ActiveTaskDispatchContext.Provider value={dispatchActiveTask}>
           <TasksDispatchContext.Provider value={dispatch}>
@@ -145,14 +120,6 @@ export function TasksProvider({ userId, children }: Props) {
         </ActiveTaskDispatchContext.Provider>
       </ActiveTaskContext.Provider>
     </TasksContext.Provider>
-  );
-}
-
-function TaskPanelLoading() {
-  return (
-    <div className="grid grid-cols-1 py-4 text-left border-1 border-gray-200 rounded-lg w-[600px] shadow-md">
-      <h2 className="text-xl font-bold pl-4 pb-4">Loading ...</h2>
-    </div>
   );
 }
 
@@ -182,6 +149,12 @@ export function taskReducer(
     | MoveTaskAction
 ): TasksDto {
   switch (action.type) {
+    case "LOGGED_IN":
+      const loggedInAction = action as LoggedInAction;
+      return {
+        ...tasksDto,
+        userId: loggedInAction.userId,
+      };
     case "ADDED":
       const addedAction = action as AddTaskAction;
       return {

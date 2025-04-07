@@ -1,20 +1,14 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import z from "zod";
 import sql from "@/app/lib/db";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
-
-type SignupState = {
-  errors?: {
-    email?: string[];
-    password?: string[];
-    confirm?: string[];
-  };
-  message?: string | null;
-};
+import { Tasks, TasksDto } from "@/app/lib/types";
+import { initialTasksDto } from "@/app/lib/data";
+import { SignupState } from "@/app/lib/types";
 
 const SignupFormSchema = z
   .object({
@@ -116,4 +110,27 @@ export async function signUp(prevState: SignupState, formData: FormData) {
   }
 
   redirect("/");
+}
+
+export async function getTaskData(userId: string): Promise<TasksDto> {
+  let list = null;
+  try {
+    list = await sql<Tasks>`
+    SELECT content FROM taskLists WHERE user_id = ${userId}
+  `;
+    console.log(list);
+  } catch (error) {
+    console.error("Error fetching tasks from database:", error);
+    console.log("Returning initial tasks due to error");
+    return initialTasksDto;
+  }
+
+  // if (list.length === 0) {
+  //   console.log("No tasks found for user, returning initial tasks");
+  //   return initialTasksDto;
+  // }
+
+  // console.log("Tasks found for user:", list);
+
+  return initialTasksDto;
 }

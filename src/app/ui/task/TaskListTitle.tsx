@@ -1,7 +1,9 @@
+"use client";
+
 import { useState, useCallback } from "react";
 import sanitizeHtml from "sanitize-html";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
-import { sanitizedConf } from "@/src/app/lib/utils";
+import { sanitizedConf } from "@/app/lib/utils";
 
 export default function CardTitle() {
   const [cardTitle, setCardTitle] = useState("Groceries");

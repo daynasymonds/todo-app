@@ -1,5 +1,5 @@
 import Panel from "@/app/ui/Panel";
-import LandingPage from "@/src/app/ui/LandingPage";
+import LandingBlurb from "@/app/ui/LandingBlurb";
 
 export default async function App() {
   return (
@@ -22,9 +22,9 @@ export default async function App() {
           <p>
             <small>written using React + Tailwind CSS + NextJS</small>
           </p>
-          <LandingPage />
+          <LandingBlurb />
         </div>
-        {/* <Panel /> */}
+        <Panel />
       </section>
     </div>
   );

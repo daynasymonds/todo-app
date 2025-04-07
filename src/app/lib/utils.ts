@@ -1,4 +1,4 @@
-import { Task, Tasks } from "@/src/app/lib/types";
+import { Task, Tasks } from "@/app/lib/types";
 
 export const sanitizedConf = {
   allowedTags: ["a"],
