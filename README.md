@@ -10,6 +10,12 @@ $ npm run dev
 
 ## local postgres
 
+Database application user
+```sql
+GRANT ALL ON users TO todo_app;
+SELECT * FROM information_schema.role_table_grants WHERE grantee = 'todo_app';
+```
+
 ```bash
 # To connect
 psql -h localhost -U admin -d app_db
@@ -17,8 +23,11 @@ psql -h localhost -U admin -d app_db
 # To bootstrap
 psql -h localhost -U admin -d app_db -f sql/bootstrap.sql
 
-# To backup
-pg_dump -h localhost -U admin -d app_db -f sql/backup.sql
+# To backup schema
+pg_dump -h localhost -U admin -d app_db -f sql/backup.sql -s -C
+
+# To backup data
+pg_dump -h localhost -U admin -d app_db -f sql/bootstrap.sql --column-inserts --data-only
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
