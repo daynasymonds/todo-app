@@ -45,11 +45,6 @@ interface MoveTaskAction extends TaskAction {
   task: Task;
 }
 
-interface LoggedInAction extends TaskAction {
-  type: "LOGGED_IN";
-  userId: string;
-}
-
 interface RemovedActiveTaskAction extends TaskAction {
   type: "REMOVED_ACTIVE_TASK";
 }
@@ -85,7 +80,6 @@ export const TasksDispatchContext = createContext<
         | MarkedCompleteAction
         | AddTaskAction
         | MoveTaskAction
-        | LoggedInAction
     ]
   >
 >(
@@ -98,7 +92,6 @@ export const TasksDispatchContext = createContext<
         | MarkedCompleteAction
         | AddTaskAction
         | MoveTaskAction
-        | LoggedInAction
     ]
   >
 );
@@ -149,12 +142,6 @@ export function taskReducer(
     | MoveTaskAction
 ): TasksDto {
   switch (action.type) {
-    case "LOGGED_IN":
-      const loggedInAction = action as LoggedInAction;
-      return {
-        ...tasksDto,
-        userId: loggedInAction.userId,
-      };
     case "ADDED":
       const addedAction = action as AddTaskAction;
       return {
