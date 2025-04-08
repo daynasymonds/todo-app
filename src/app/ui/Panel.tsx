@@ -20,7 +20,7 @@ export default async function Panel({}) {
 function TaskContainerWrapper({ tasksDto }: { tasksDto: TasksDto }) {
   return (
     <Suspense fallback={<TaskPanelLoading />}>
-      <TasksProvider tasksDto={tasksDto}>
+      <TasksProvider initialDto={tasksDto}>
         <TaskContainer />
       </TasksProvider>
     </Suspense>

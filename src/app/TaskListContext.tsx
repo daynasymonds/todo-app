@@ -55,7 +55,7 @@ interface SetActiveTaskAction extends TaskAction {
 }
 
 interface Props {
-  tasksDto: TasksDto;
+  initialDto: TasksDto;
   children?: ReactNode;
 }
 
@@ -96,12 +96,12 @@ export const TasksDispatchContext = createContext<
   >
 );
 
-export function TasksProvider({ tasksDto, children }: Props) {
+export function TasksProvider({ initialDto, children }: Props) {
   const [activeTaskId, dispatchActiveTask] = useReducer(
     activeTaskReducer,
     null
   );
-  const [, dispatch] = useReducer(taskReducer, tasksDto);
+  const [tasksDto, dispatch] = useReducer(taskReducer, initialDto);
 
   return (
     <TasksContext.Provider value={tasksDto}>
