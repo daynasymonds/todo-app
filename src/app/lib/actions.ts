@@ -1,12 +1,12 @@
 "use server";
 
-import { auth, signIn, signOut } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import z from "zod";
 import sql from "@/app/lib/db";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
-import { Tasks, TasksDto } from "@/app/lib/types";
+import { TasksDto, emptyTasksDto } from "@/app/lib/types";
 import { initialTasksDto } from "@/app/lib/data";
 import { SignupState } from "@/app/lib/types";
 
@@ -54,6 +54,7 @@ export async function authenticate(
     }
     throw error;
   }
+  redirect("/");
 }
 
 export async function logOut() {
@@ -113,24 +114,23 @@ export async function signUp(prevState: SignupState, formData: FormData) {
 }
 
 export async function getTaskData(userId: string): Promise<TasksDto> {
-  let list = null;
   try {
-    list = await sql<Tasks>`
-    SELECT content FROM taskLists WHERE user_id = ${userId}
+    const list = await sql`
+    SELECT content FROM task_lists WHERE user_id::text = ${userId}
   `;
-    console.log(list);
+    if (list.length === 1) {
+      return {
+        tasks: list[0].content.tasks,
+        completedTasks: list[0].content.completedTasks,
+        userId: list[0].content.userId,
+      } as TasksDto;
+    }
   } catch (error) {
     console.error("Error fetching tasks from database:", error);
     console.log("Returning initial tasks due to error");
     return initialTasksDto;
   }
 
-  // if (list.length === 0) {
-  //   console.log("No tasks found for user, returning initial tasks");
-  //   return initialTasksDto;
-  // }
-
-  // console.log("Tasks found for user:", list);
-
-  return initialTasksDto;
+  console.log("No tasks found for user, returning initial tasks");
+  return emptyTasksDto;
 }

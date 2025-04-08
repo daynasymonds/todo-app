@@ -1,19 +1,21 @@
-import NextAuth from "next-auth";
+import NextAuth, { type User } from "next-auth";
 import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
 import { z, ZodError } from "zod";
-import type { User } from "@/src/app/lib/types";
 import bcrypt from "bcrypt";
 import sql from "@/app/lib/db";
+import { DbUser } from "@/app/lib/types";
 
 const SignInSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(32),
 });
 
-async function getUser(email: string): Promise<User> {
+async function getUser(email: string): Promise<DbUser> {
   try {
-    const user = await sql<User[]>`SELECT * FROM users WHERE email=${email}`;
+    const user = await sql<
+      DbUser[]
+    >`SELECT id::text, email, password FROM users WHERE email=${email}`;
     return user[0];
   } catch (error) {
     console.error("Failed to fetch user:", error);
@@ -39,10 +41,11 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           if (user) {
             const isPassword = await bcrypt.compare(password, user.password);
             if (isPassword) {
-              console.log("User found:", user);
-              const session = auth();
-              console.log("credsProvider: Session:", session);
-              return user;
+              return {
+                id: user.id,
+                email: user.email,
+                name: user.email,
+              } as User;
             }
           }
         } catch (error) {

@@ -1,24 +1,29 @@
 import { TasksProvider } from "@/app/TaskListContext";
 import TaskContainer from "@/app/ui/task/TaskContainer";
-import { TasksDto, emptyTasksDto } from "@/app/lib/types";
+import { emptyTasksDto, TasksDto } from "@/app/lib/types";
 import { getTaskData } from "@/app/lib/actions";
-import { auth } from "@/auth";
 import { Suspense } from "react";
+import { auth } from "@/auth";
 
-export default async function Panel() {
+export default async function Panel({}) {
   const session = await auth();
-  const userId = session?.user?.id;
-  let tasksDto: TasksDto = emptyTasksDto;
-  if (session && userId) {
-    tasksDto = await getTaskData(userId);
+  const userId = session?.user?.id ?? "";
+
+  if (!userId) {
+    return <TaskContainerWrapper tasksDto={emptyTasksDto} />;
   }
 
+  const dto = await getTaskData(userId);
+  return <TaskContainerWrapper tasksDto={dto} />;
+}
+
+function TaskContainerWrapper({ tasksDto }: { tasksDto: TasksDto }) {
   return (
-    <TasksProvider tasksDto={tasksDto}>
-      <Suspense fallback={<TaskPanelLoading />}>
+    <Suspense fallback={<TaskPanelLoading />}>
+      <TasksProvider tasksDto={tasksDto}>
         <TaskContainer />
-      </Suspense>
-    </TasksProvider>
+      </TasksProvider>
+    </Suspense>
   );
 }
 

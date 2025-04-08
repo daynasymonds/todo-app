@@ -30,7 +30,7 @@ export const DragTypes = {
   TASK: 'task',
 }
 
-export type User = {
+export interface DbUser {
   id: string;
   name: string;
   email: string;
