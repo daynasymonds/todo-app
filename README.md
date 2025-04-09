@@ -8,14 +8,7 @@ $ npm test
 $ npm run dev
 ```
 
-## local postgres
-
-Database application user
-```sql
-GRANT ALL ON users TO todo_app;
-SELECT * FROM information_schema.role_table_grants WHERE grantee = 'todo_app';
-```
-
+## local postgresql
 ```bash
 # To connect
 psql -h localhost -U admin -d app_db
