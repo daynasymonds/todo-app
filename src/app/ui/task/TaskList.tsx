@@ -5,11 +5,7 @@ import AddTask from "@/app/ui/task/AddTask";
 import TaskListItem from "@/app/ui/task/TaskListItem";
 import { Task, Tasks } from "@/app/lib/types";
 import clsx from "clsx";
-import {
-  ActiveTaskContext,
-  TasksContext,
-  TasksDispatchContext,
-} from "@/app/TaskListContext";
+import { ActiveTaskContext, TasksDispatchContext } from "@/app/TaskListContext";
 import { DragTypes } from "@/app/lib/types";
 import { useDrop } from "react-dnd";
 import { getNextPosition, getNextTaskId } from "@/app/lib/utils";
@@ -18,7 +14,7 @@ export interface TaskListProps {
   tasks: Tasks;
 }
 
-export default function TaskList({tasks}: TaskListProps) {
+export default function TaskList({ tasks }: TaskListProps) {
   const dispatch = useContext(TasksDispatchContext);
 
   const nextTaskId = getNextTaskId(tasks);

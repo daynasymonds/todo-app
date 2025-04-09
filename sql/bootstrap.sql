@@ -25,6 +25,20 @@ INSERT INTO public.users (id, name, email, password) VALUES ('7dacc1c0-88f7-4e6b
 
 
 --
+-- Data for Name: task_lists; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+INSERT INTO public.task_lists (content, id, user_id) VALUES ('"{\"tasks\":[{\"id\":4,\"content\":\"cookies\",\"position\":1,\"isCompleted\":false},{\"id\":2,\"content\":\"jam\",\"position\":2,\"isCompleted\":false},{\"id\":5,\"content\":\"asdf\",\"isCompleted\":false,\"position\":3}],\"completedTasks\":[],\"userId\":\"7dacc1c0-88f7-4e6b-82d1-d5a103de9be6\",\"title\":\"Groceries\"}"', 3, '7dacc1c0-88f7-4e6b-82d1-d5a103de9be6');
+
+
+--
+-- Name: task_lists_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.task_lists_id_seq', 3, true);
+
+
+--
 -- PostgreSQL database dump complete
 --
 

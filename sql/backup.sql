@@ -59,6 +59,41 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: task_lists; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.task_lists (
+    content jsonb,
+    id integer NOT NULL,
+    user_id uuid
+);
+
+
+ALTER TABLE public.task_lists OWNER TO admin;
+
+--
+-- Name: task_lists_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.task_lists_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.task_lists_id_seq OWNER TO admin;
+
+--
+-- Name: task_lists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.task_lists_id_seq OWNED BY public.task_lists.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -71,6 +106,21 @@ CREATE TABLE public.users (
 
 
 ALTER TABLE public.users OWNER TO admin;
+
+--
+-- Name: task_lists id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.task_lists ALTER COLUMN id SET DEFAULT nextval('public.task_lists_id_seq'::regclass);
+
+
+--
+-- Name: task_lists tasklists_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.task_lists
+    ADD CONSTRAINT tasklists_pkey PRIMARY KEY (id);
+
 
 --
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: admin
@@ -89,6 +139,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: task_lists tasklists_userid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.task_lists
+    ADD CONSTRAINT tasklists_userid_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: DATABASE app_db; Type: ACL; Schema: -; Owner: admin
 --
 
@@ -100,6 +158,13 @@ GRANT ALL ON DATABASE app_db TO todo_app;
 --
 
 GRANT ALL ON SCHEMA public TO todo_app;
+
+
+--
+-- Name: TABLE task_lists; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON TABLE public.task_lists TO todo_app;
 
 
 --
