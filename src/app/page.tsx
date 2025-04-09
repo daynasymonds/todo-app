@@ -48,7 +48,7 @@ export default async function App() {
                 alt="LinkedIn logo"
               />
             </a>
-          
+            <a href="https://www.flaticon.com/free-icons/verified" title="verified icons">Verified icons created by NX Icon - Flaticon</a>
         </footer>
       </section>
     </div>
