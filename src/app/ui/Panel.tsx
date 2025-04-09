@@ -8,13 +8,13 @@ import { auth } from "@/auth";
 export default async function Panel({}) {
   const session = await auth();
   const userId = session?.user?.id ?? "";
-
+  
   if (!userId) {
-    return <TaskContainerWrapper tasksDto={emptyTasksDto} />;
+    return <TaskContainerWrapper key={"signedOut"} tasksDto={emptyTasksDto} />;
   }
 
   const dto = await getTaskData(userId);
-  return <TaskContainerWrapper tasksDto={dto} />;
+  return <TaskContainerWrapper key={"signedIn"} tasksDto={dto} />;
 }
 
 function TaskContainerWrapper({ tasksDto }: { tasksDto: TasksDto }) {
