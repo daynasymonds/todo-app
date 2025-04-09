@@ -1,5 +1,6 @@
 import Panel from "@/app/ui/Panel";
 import LandingBlurb from "@/app/ui/LandingBlurb";
+import Image from "next/image";
 
 export default async function App() {
   return (
@@ -26,6 +27,29 @@ export default async function App() {
           <LandingBlurb />
         </div>
         <Panel />
+        <footer className="flex gap-4">
+          
+            <a target="_blank" href="https://github.com/daynasymonds/todo-app">
+              <Image
+                src="/github-mark.png"
+                width={24}
+                height={24}
+                alt="GitHub logo"
+              />
+            </a>
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/in/dayna-symonds-1862302a/"
+            >
+              <Image
+                src="/InBug-Black.png"
+                width={24}
+                height={24}
+                alt="LinkedIn logo"
+              />
+            </a>
+          
+        </footer>
       </section>
     </div>
   );
