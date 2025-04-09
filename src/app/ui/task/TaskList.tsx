@@ -3,7 +3,7 @@
 import { useCallback, useContext } from "react";
 import AddTask from "@/app/ui/task/AddTask";
 import TaskListItem from "@/app/ui/task/TaskListItem";
-import { Task } from "@/app/lib/types";
+import { Task, Tasks } from "@/app/lib/types";
 import clsx from "clsx";
 import {
   ActiveTaskContext,
@@ -14,9 +14,11 @@ import { DragTypes } from "@/app/lib/types";
 import { useDrop } from "react-dnd";
 import { getNextPosition, getNextTaskId } from "@/app/lib/utils";
 
-export default function TaskList() {
-  const allTasks = useContext(TasksContext);
-  const tasks = allTasks.tasks;
+export interface TaskListProps {
+  tasks: Tasks;
+}
+
+export default function TaskList({tasks}: TaskListProps) {
   const dispatch = useContext(TasksDispatchContext);
 
   const nextTaskId = getNextTaskId(tasks);

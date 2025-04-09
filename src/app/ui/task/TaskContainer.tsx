@@ -7,9 +7,13 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import CompletedTaskList from "@/app/ui/task/CompletedTaskList";
 import { useContext, KeyboardEvent } from "react";
 import { ActiveTaskDispatchContext } from "@/app/TaskListContext";
+import { useAutosave } from "react-autosave";
+import { saveTaskData } from "@/app/lib/actions";
+import { TasksContext } from "@/app/TaskListContext";
 
 export default function TaskContainer() {
   const activeTaskDispatch = useContext(ActiveTaskDispatchContext);
+  const allTasks = useContext(TasksContext);
 
   const removeActiveTask = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -19,6 +23,9 @@ export default function TaskContainer() {
       });
     }
   };
+  
+  useAutosave({ data: allTasks, onSave: saveTaskData});
+
   return (
     <div
       className={
@@ -28,7 +35,7 @@ export default function TaskContainer() {
     >
       <TaskListTitle />
       <DndProvider backend={HTML5Backend}>
-        <TaskList />
+        <TaskList tasks={allTasks.tasks}/>
       </DndProvider>
       <CompletedTaskList />
     </div>

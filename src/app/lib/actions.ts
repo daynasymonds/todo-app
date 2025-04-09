@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { signIn, signOut, auth } from "@/auth";
 import { AuthError } from "next-auth";
 import z from "zod";
 import sql from "@/app/lib/db";
@@ -118,12 +118,9 @@ export async function getTaskData(userId: string): Promise<TasksDto> {
     const list = await sql`
     SELECT content FROM task_lists WHERE user_id::text = ${userId}
   `;
+  
     if (list.length === 1) {
-      return {
-        tasks: list[0].content.tasks,
-        completedTasks: list[0].content.completedTasks,
-        userId: list[0].content.userId,
-      } as TasksDto;
+      return JSON.parse(list[0].content) as TasksDto;
     }
   } catch (error) {
     console.error("Error fetching tasks from database:", error);
@@ -133,4 +130,23 @@ export async function getTaskData(userId: string): Promise<TasksDto> {
 
   console.log("No tasks found for user, returning initial tasks");
   return emptyTasksDto;
+}
+
+export async function saveTaskData(tasksDto: TasksDto): Promise<void> {
+  const session = await auth();
+  const userId = session?.user?.id ?? "";
+
+  if (!userId) {
+    console.log("No user ID found, not saving tasks.");
+    return;
+  }
+  const content = JSON.stringify(tasksDto);
+  console.log("Saving task data to database");
+  try {
+    await sql`
+    UPDATE task_lists SET content = ${content} WHERE user_id::text = ${userId}
+    `;
+  } catch (error) {
+    console.error("Error saving tasks to database:", error);
+  }
 }
