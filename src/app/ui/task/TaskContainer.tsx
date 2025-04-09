@@ -33,7 +33,7 @@ export default function TaskContainer() {
       }
       onKeyDown={removeActiveTask}
     >
-      <TaskListTitle />
+      <TaskListTitle title={allTasks.title}/>
       <DndProvider backend={HTML5Backend}>
         <TaskList tasks={allTasks.tasks}/>
       </DndProvider>

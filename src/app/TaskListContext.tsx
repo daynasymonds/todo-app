@@ -45,6 +45,11 @@ interface MoveTaskAction extends TaskAction {
   task: Task;
 }
 
+interface UpdatedTitleAction extends TaskAction {
+  type: "UPDATED_TITLE";
+  title: string;
+}
+
 interface RemovedActiveTaskAction extends TaskAction {
   type: "REMOVED_ACTIVE_TASK";
 }
@@ -80,6 +85,7 @@ export const TasksDispatchContext = createContext<
         | MarkedCompleteAction
         | AddTaskAction
         | MoveTaskAction
+        | UpdatedTitleAction
     ]
   >
 >(
@@ -92,6 +98,7 @@ export const TasksDispatchContext = createContext<
         | MarkedCompleteAction
         | AddTaskAction
         | MoveTaskAction
+        | UpdatedTitleAction
     ]
   >
 );
@@ -216,6 +223,12 @@ export function taskReducer(
           { ...movedAction.task },
           ...newTasks.slice(movedAction.to),
         ]),
+      };
+    case "UPDATED_TITLE":
+      const updatedTitleAction = action as UpdatedTitleAction;
+      return {
+        ...tasksDto,
+        title: updatedTitleAction.title,
       };
 
     default:

@@ -5,29 +5,13 @@ export type Task = {
   isCompleted: boolean;
 };
 
-export const initialTask: Task = {
-  position: 0,
-  id: 0,
-  content: "",
-  isCompleted: false,
-};
-
 export type Tasks = Task[];
 
 export type TasksDto = {
   tasks: Tasks;
   completedTasks: Tasks;
   userId: string | null;
-}
-
-export const emptyTasksDto = {
-  tasks: [],
-  completedTasks: [],
-  userId: null,
-} as TasksDto;
-
-export const DragTypes = {
-  TASK: 'task',
+  title: string
 }
 
 export interface DbUser {
@@ -46,4 +30,21 @@ export type SignupState = {
   message?: string | null;
 };
 
+export const initialTask: Task = {
+  position: 0,
+  id: 0,
+  content: "",
+  isCompleted: false,
+};
+
+
+export const emptyTasksDto = {
+  tasks: [],
+  completedTasks: [],
+  userId: null,
+} as TasksDto;
+
+export const DragTypes = {
+  TASK: 'task',
+}
 
