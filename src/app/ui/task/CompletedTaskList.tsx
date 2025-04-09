@@ -1,16 +1,17 @@
 "use client";
 
-import { useContext, useState } from "react";
-import { TasksContext } from "@/app/TaskListContext";
+import { useState } from "react";
 import CompletedTaskListItem from "@/app/ui/task/CompletedTaskListItem";
 import Image from "next/image";
 import clsx from "clsx";
+import { TaskListProps } from "@/src/app/ui/task/TaskList";
 
-export default function CompletedTaskList() {
-  const allTasks = useContext(TasksContext);
-  const tasks = allTasks.completedTasks;
-
+export default function CompletedTaskList({ tasks }: TaskListProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  if (tasks.length === 0) {
+    return null;
+  }
 
   return (
     <div>

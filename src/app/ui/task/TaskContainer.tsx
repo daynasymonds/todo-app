@@ -37,7 +37,7 @@ export default function TaskContainer() {
       <DndProvider backend={HTML5Backend}>
         <TaskList tasks={allTasks.tasks}/>
       </DndProvider>
-      <CompletedTaskList />
+      <CompletedTaskList tasks={allTasks.completedTasks}/>
     </div>
   );
 }
