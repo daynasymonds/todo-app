@@ -47,9 +47,8 @@ export default function TaskList({ tasks }: TaskListProps) {
 
   const [, drop] = useDrop(() => ({ accept: DragTypes.TASK }));
 
-  return (
+  return drop(
     <ul
-      ref={drop}
       className={
         "py-2 grid grid-cols-1 gap-2 tracking-[.00625em] text-[1rem] font-normal leading-[2rem] w-full"
       }

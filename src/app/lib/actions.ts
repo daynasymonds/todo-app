@@ -7,7 +7,6 @@ import sql from "@/app/lib/db";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import { TasksDto, emptyTasksDto } from "@/app/lib/types";
-import { initialTasksDto } from "@/app/lib/data";
 import { SignupState } from "@/app/lib/types";
 
 const SignupFormSchema = z
@@ -124,8 +123,7 @@ export async function getTaskData(userId: string): Promise<TasksDto> {
     }
   } catch (error) {
     console.error("Error fetching tasks from database:", error);
-    console.log("Returning initial tasks due to error");
-    return initialTasksDto;
+    return emptyTasksDto;
   }
 
   console.log("No tasks found for user, returning initial tasks");

@@ -1,7 +1,6 @@
 "use client";
 
 import clsx from "clsx";
-import Image from "next/image";
 import { Task } from "@/app/lib/types";
 import TaskComponent from "@/app/ui/task/Task";
 import { useDrag, useDrop } from "react-dnd";
@@ -61,32 +60,34 @@ export default function TaskListItem({
     [findTaskItem, moveTaskItem]
   );
 
-  return (
-    <li
-      ref={(node) => preview(drop(node))}
-      key={task.id}
-      style={{ opacity }}
-      className={clsx(
-        "group grid grid-cols-1 items-center w-full px-4 border-t-1 border-b-1 ",
-        {
-          "border-light-gray": task.id === activeTaskId,
-          "border-transparent": task.id !== activeTaskId,
-        }
-      )}
-    >
-      <div className={"md:group grid grid-cols-[24px_1fr] w-full h-8 "}>
-        <Image
-          ref={drag}
-          className={
-            "md:invisible md:group-hover:visible place-items-center w-[20px] h-full group-hover:cursor-move"
+  const draggableHandle = drag(
+    <img
+      className="md:invisible md:group-hover:visible place-items-center w-[20px] h-full group-hover:cursor-move"
+      src="./drag.svg"
+      alt="Move task"
+      width="20"
+      height="20"
+    />
+  );
+
+  return preview(
+    drop(
+      <li
+        key={task.id}
+        style={{ opacity }}
+        className={clsx(
+          "group grid grid-cols-1 items-center w-full px-4 border-t-1 border-b-1 ",
+          {
+            "border-light-gray": task.id === activeTaskId,
+            "border-transparent": task.id !== activeTaskId,
           }
-          src="./drag.svg"
-          alt="Move task"
-          width="20"
-          height="20"
-        />
-        <TaskComponent task={task} />
-      </div>
-    </li>
+        )}
+      >
+        <div className={"md:group grid grid-cols-[24px_1fr] w-full h-8 "}>
+          {draggableHandle}
+          <TaskComponent task={task} />
+        </div>
+      </li>
+    )
   );
 }

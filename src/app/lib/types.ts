@@ -39,9 +39,10 @@ export const initialTask: Task = {
 
 
 export const emptyTasksDto = {
-  tasks: [],
-  completedTasks: [],
+  tasks: [{id: 1, content: "a task", isCompleted: false}],
+  completedTasks: [{id: 2, content: "a completed task", isCompleted: true}],
   userId: null,
+  title: "List title"
 } as TasksDto;
 
 export const DragTypes = {

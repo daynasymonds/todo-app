@@ -18,7 +18,7 @@ export default function Checkbox({ ...props }: CheckboxProps) {
       className={props.className}
       role="checkbox"
       aria-checked={props.isChecked}
-      tabIndex="0"
+      tabIndex={0}
       onClick={() => {
         setIsChecked(!isChecked);
         props.onChange();
