@@ -39,8 +39,8 @@ export const initialTask: Task = {
 
 
 export const emptyTasksDto = {
-  tasks: [{id: 1, content: "a task", isCompleted: false}],
-  completedTasks: [{id: 2, content: "a completed task", isCompleted: true}],
+  tasks: [{id: 1, content: "a task", isCompleted: false, position: 1}],
+  completedTasks: [{id: 2, content: "a completed task", isCompleted: true, position: 2}],
   userId: null,
   title: "List title"
 } as TasksDto;

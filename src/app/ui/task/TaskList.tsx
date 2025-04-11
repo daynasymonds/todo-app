@@ -8,17 +8,20 @@ import clsx from "clsx";
 import { ActiveTaskContext, TasksDispatchContext } from "@/app/TaskListContext";
 import { DragTypes } from "@/app/lib/types";
 import { useDrop } from "react-dnd";
-import { getNextPosition, getNextTaskId } from "@/app/lib/utils";
 
 export interface TaskListProps {
   tasks: Tasks;
+  nextTaskId: number;
+  nextTaskPosition: number;
 }
 
-export default function TaskList({ tasks }: TaskListProps) {
+export default function TaskList({
+  tasks,
+  nextTaskId,
+  nextTaskPosition,
+}: TaskListProps) {
   const dispatch = useContext(TasksDispatchContext);
 
-  const nextTaskId = getNextTaskId(tasks);
-  const nextTaskPosition = getNextPosition(tasks);
   const activeTaskId = useContext(ActiveTaskContext);
 
   const findTaskItem = useCallback(

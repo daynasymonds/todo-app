@@ -66,12 +66,12 @@ export default function Task({ task }: TaskProps) {
         onChange={handleContentChange}
         onBlur={handleContentChange}
         html={task.content}
-        onClick={() =>
+        onClick={() => {
           activeTaskDispatch({
             type: "SET_ACTIVE_TASK",
             taskId: task.id,
-          })
-        }
+          });
+        }}
       />
 
       <button

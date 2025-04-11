@@ -4,9 +4,12 @@ import { useState } from "react";
 import CompletedTaskListItem from "@/app/ui/task/CompletedTaskListItem";
 import Image from "next/image";
 import clsx from "clsx";
-import { TaskListProps } from "@/src/app/ui/task/TaskList";
+import { Tasks } from "@/src/app/lib/types";
 
-export default function CompletedTaskList({ tasks }: TaskListProps) {
+interface CompletedTaskListProps {
+  tasks: Tasks;
+}
+export default function CompletedTaskList({ tasks }: CompletedTaskListProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   if (tasks.length === 0) {

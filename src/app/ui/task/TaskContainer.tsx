@@ -10,6 +10,7 @@ import { ActiveTaskDispatchContext } from "@/app/TaskListContext";
 import { useAutosave } from "react-autosave";
 import { saveTaskData } from "@/app/lib/actions";
 import { TasksContext } from "@/app/TaskListContext";
+import { getNextPosition, getNextTaskId } from "@/src/app/lib/utils";
 
 export default function TaskContainer() {
   const activeTaskDispatch = useContext(ActiveTaskDispatchContext);
@@ -26,6 +27,12 @@ export default function TaskContainer() {
   
   useAutosave({ data: allTasks, onSave: saveTaskData});
 
+  const tasks = allTasks.tasks;
+  const completedTasks = allTasks.completedTasks;
+  const tasksList = [...tasks, ...completedTasks];
+  const nextTaskId = getNextTaskId(tasksList);
+  const nextTaskPosition = getNextPosition(tasksList);
+
   return (
     <div
       className={
@@ -35,9 +42,9 @@ export default function TaskContainer() {
     >
       <TaskListTitle title={allTasks.title}/>
       <DndProvider backend={HTML5Backend}>
-        <TaskList tasks={allTasks.tasks}/>
+        <TaskList tasks={tasks} nextTaskId={nextTaskId} nextTaskPosition={nextTaskPosition}/>
       </DndProvider>
-      <CompletedTaskList tasks={allTasks.completedTasks}/>
+      <CompletedTaskList tasks={completedTasks}/>
     </div>
   );
 }
