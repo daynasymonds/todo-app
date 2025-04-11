@@ -97,10 +97,18 @@ export async function signUp(prevState: SignupState, formData: FormData) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    await sql`
+    const insertResult = await sql`
         INSERT INTO users (email, password)
         VALUES (${email}, ${hashedPassword})
-        ON CONFLICT (id) DO NOTHING;
+        ON CONFLICT (id) DO NOTHING
+        
+        returning id
+      `;
+
+    const userId = insertResult[0].id;
+    const content = JSON.stringify(emptyTasksDto);
+    await sql`
+      INSERT INTO task_lists (content, user_id) VALUES (${content}, ${userId})
       `;
   } catch (error) {
     console.log(error);
@@ -117,7 +125,7 @@ export async function getTaskData(userId: string): Promise<TasksDto> {
     const list = await sql`
     SELECT content FROM task_lists WHERE user_id::text = ${userId}
   `;
-  
+
     if (list.length === 1) {
       return JSON.parse(list[0].content) as TasksDto;
     }
@@ -138,15 +146,14 @@ export async function saveTaskData(tasksDto: TasksDto): Promise<void> {
     console.log("No user ID found, not saving tasks.");
     return;
   }
+
   const content = JSON.stringify(tasksDto);
   console.log("Saving task data to database");
   try {
-    const res = await sql`
+    await sql`
     UPDATE task_lists SET content = ${content} WHERE user_id::text = ${userId}
     `;
-    console.log("res", res);
   } catch (error) {
     console.error("Error saving tasks to database:", error);
   }
-  console.log("updated content");
 }
