@@ -141,10 +141,12 @@ export async function saveTaskData(tasksDto: TasksDto): Promise<void> {
   const content = JSON.stringify(tasksDto);
   console.log("Saving task data to database");
   try {
-    await sql`
+    const res = await sql`
     UPDATE task_lists SET content = ${content} WHERE user_id::text = ${userId}
     `;
+    console.log("res", res);
   } catch (error) {
     console.error("Error saving tasks to database:", error);
   }
+  console.log("updated content");
 }
