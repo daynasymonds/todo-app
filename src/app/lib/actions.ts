@@ -117,7 +117,7 @@ export async function signUp(prevState: SignupState, formData: FormData) {
     } as SignupState;
   }
 
-  redirect("/");
+  redirect("/login");
 }
 
 export async function getTaskData(userId: string): Promise<TasksDto> {
