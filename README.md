@@ -25,6 +25,8 @@ pg_dump -h localhost -U admin -d app_db -f sql/bootstrap.sql --column-inserts --
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+Deployed on [Vercel](https://todo-app-nu-five-83.vercel.app/).
+
 Future work items:
 * tests
 * aria labels
