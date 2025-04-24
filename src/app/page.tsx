@@ -25,6 +25,10 @@ export default async function App() {
             <small>Written using React + Tailwind CSS + NextJS.</small>
           </p>
           <LandingBlurb />
+
+          <p>
+            <small>* Note that accounts are deleted on a daily basis.</small>
+          </p>
         </div>
         <Panel />
         <footer className="flex gap-4">
