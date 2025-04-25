@@ -1,4 +1,4 @@
-import postgres from 'postgres'
+import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, {
   ssl: process.env.POSTGRES_SSL === "false" ? false : "require",
@@ -6,4 +6,4 @@ const sql = postgres(process.env.POSTGRES_URL!, {
   max_lifetime: 60 * 30,
 });
 
-export default sql
+export default sql;

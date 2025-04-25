@@ -1,0 +1,8 @@
+{
+    "crons": [
+      {
+        "path": "/api/truncate",
+        "schedule": "*/10 * * * *"
+      }
+    ]
+  }
