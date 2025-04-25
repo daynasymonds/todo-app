@@ -13,6 +13,12 @@ export function GET(request: Request) {
   console.log("Truncating task_lists and users tables");
   sql`TRUNCATE TABLE task_lists, users CASCADE`.then((result) => {
     console.log("Truncated task_lists and users tables", result);
+  }).catch((error) => {
+    console.error("Error truncating task_lists and users tables", error);
+    return new Response("Error truncating tables", {
+      status: 500,
+    });
   });
+  console.log("Truncate API completed successfully");
   return new Response("ok", { status: 200 });
 }
